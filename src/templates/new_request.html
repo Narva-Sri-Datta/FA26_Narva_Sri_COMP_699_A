@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}New request{% endblock %}{% block content %}
+<h1>Create a service request</h1><p>Describe the problem. You may choose a category if you already know it.</p>
+<form method="post"><label for="description">Problem description</label>
+<textarea id="description" name="description" rows="5" maxlength="1000" required>{{ description|default('') }}</textarea>
+<label for="category">Service category (optional)</label><select id="category" name="category">
+<option value="">Let the system suggest a category</option>
+{% for category in categories %}<option value="{{ category }}" {% if chosen|default('') == category %}selected{% endif %}>{{ category }}</option>{% endfor %}
+</select><button type="submit">Submit request</button></form>{% endblock %}

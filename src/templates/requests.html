@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Requests{% endblock %}{% block content %}
+<h1>Submitted service requests</h1>{% if requests %}{% for item in requests %}
+<article><h2><a href="{{ url_for('request_detail', request_id=item.id) }}">Request #{{ item.id }}</a></h2>
+<p>{{ item.description }}</p><p>Predicted: {{ item.predicted_category }} | Final: {{ item.final_category }}</p>
+<p>Status: {{ item.status }} | Confidence: {{ '%.2f'|format(item.confidence) }}</p><small>{{ item.created_at }}</small></article>
+{% endfor %}{% else %}<p>No requests have been submitted yet.</p>{% endif %}{% endblock %}

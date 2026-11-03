@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block content %}
+<h1>Local Service Problem Diagnosis and Matching System</h1>
+<p>This version lets a Local User submit a problem and receive a suggested service category.</p>
+<a class="button" href="{{ url_for('new_request') }}">Create a service request</a>
+<p><a href="{{ url_for('requests_page') }}">View submitted requests</a></p>
+<p class="note">The prediction is a suggestion from a small training dataset, not a guaranteed diagnosis.</p>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Request details{% endblock %}{% block content %}
+<h1>Service request submitted</h1><p><b>Request ID:</b> {{ item.id }}</p>
+<p><b>Description:</b> {{ item.description }}</p><p><b>Predicted category:</b> {{ item.predicted_category }}</p>
+<p><b>Final category:</b> {{ item.final_category }}</p><p><b>Confidence:</b> {{ '%.2f'|format(item.confidence) }}</p>
+<p><b>Status:</b> {{ item.status }}</p><p class="note">If you selected a category, it is saved as the final category. The prediction remains stored separately.</p>
+<a href="{{ url_for('requests_page') }}">View all requests</a>{% endblock %}
