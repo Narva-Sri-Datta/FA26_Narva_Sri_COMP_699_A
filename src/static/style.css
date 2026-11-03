@@ -1,0 +1,7 @@
+body{font-family:Arial,sans-serif;line-height:1.5;margin:0;background:#f3f5f7;color:#222}
+header{background:#fff;padding:16px 5%;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+header a{color:#174ea6;text-decoration:none;font-weight:bold}nav{display:flex;gap:16px}
+.container{max-width:820px;margin:30px auto;padding:26px;background:#fff;border-radius:8px}
+label{display:block;margin:16px 0 6px;font-weight:bold}textarea,select{width:100%;box-sizing:border-box;padding:11px;font:inherit;border:1px solid #aaa;border-radius:4px}
+button,.button{display:inline-block;margin-top:14px;padding:10px 16px;background:#174ea6;color:white;border:0;border-radius:4px;text-decoration:none;cursor:pointer}
+article{padding:14px;margin:14px 0;border:1px solid #ddd;border-radius:5px}.note,small{color:#555}.flash.error{color:#a11}
