@@ -1,0 +1,31 @@
+description,category
+sink pipe is leaking,Plumbing
+bathroom faucet is dripping,Plumbing
+blocked drain,Plumbing
+water leaking under sink,Plumbing
+shower has low water pressure,Plumbing
+water heater is not working,Plumbing
+power outlet is not working,Electrical
+lights keep flickering,Electrical
+circuit breaker keeps tripping,Electrical
+switch makes a buzzing sound,Electrical
+ceiling fan is not running,Electrical
+wiring has a burning smell,Electrical
+washing machine will not start,Appliance Repair
+refrigerator is not cooling,Appliance Repair
+microwave stopped heating,Appliance Repair
+dishwasher makes loud noise,Appliance Repair
+air conditioner is not cooling,Appliance Repair
+oven does not heat,Appliance Repair
+door hinge is broken,Carpentry
+wooden cabinet door is loose,Carpentry
+shelf needs repair,Carpentry
+wooden table leg is damaged,Carpentry
+wall needs a fresh coat of paint,Painting
+paint is peeling from wall,Painting
+bedroom wall needs painting,Painting
+need to repaint the front door,Painting
+house needs deep cleaning,Cleaning
+kitchen cleaning service needed,Cleaning
+bathroom needs cleaning,Cleaning
+move out cleaning required,Cleaning
