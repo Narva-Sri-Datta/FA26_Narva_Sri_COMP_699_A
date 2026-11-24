@@ -1,10 +1,6 @@
 # Local Service Connect
 ### Local Service Problem Diagnosis and Matching System
 
-**Course project:** COMP-699  
-**Development stage:** Week 3 – Component Integration and Initial Working System  
-**Current milestone evidence date:** November 24, 2026  
-**Planned final project date:** December 8, 2026
 
 ---
 
