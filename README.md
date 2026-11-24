@@ -1,362 +1,531 @@
-# FA26_Pitts_David_COMP_699_A
-# Local Service Problem Diagnosis and Matching System
+# Local Service Connect
+### Local Service Problem Diagnosis and Matching System
+
+**Course project:** COMP-699  
+**Development stage:** Week 3 – Component Integration and Initial Working System  
+**Current milestone evidence date:** November 24, 2026  
+**Planned final project date:** December 8, 2026
+
+---
 
 ## 1. Project Overview
 
-The Local Service Problem Diagnosis and Matching System is a Python-based project designed to help users identify suitable service categories for household and equipment problems.
+Local Service Connect is a Python Flask web application that helps people describe household or equipment problems and connect with suitable local service providers.
 
-People often have difficulty deciding which type of service provider to contact when something stops working. For example, a leaking kitchen pipe may require a plumber, while a faulty electrical switch may require an electrician. This project aims to reduce that confusion by processing a problem description and suggesting a relevant service category.
+A user may know that something is wrong but may not know which type of professional to contact. For example, a leaking kitchen sink may need a plumber, while a faulty light may need an electrician. The application accepts a problem description and uses a text-classification model to suggest a service category. The user can review the category and send the request to a suitable provider.
 
-The initial version is a technical proof of concept. It accepts a problem description through a web page, uses a machine-learning classification model to predict a category, and stores the request in an SQLite database. The project will be expanded to support service provider matching and request management.
+The application includes three user roles:
+
+- **Local user/customer:** registers, submits service requests, reviews the suggested category, sends requests, tracks status, and submits feedback.
+- **Service provider:** registers business details, selects service categories, receives requests, accepts or rejects them, and updates service status.
+- **System administrator:** manages accounts, approves providers, manages service categories, and views service requests.
+
+The Week 3 version connects the main customer, provider, administrator, classification, database, and feedback components. It is an academic prototype and is still being tested and improved.
 
 ## 2. Project Objectives
 
-The main objectives are:
+The project aims to:
 
 - Accept household and equipment problem descriptions through a web interface.
-- Process submitted text and predict a suitable service category.
-- Store problem descriptions and classification results in a database.
-- Match submitted requests with service providers based on their service categories.
-- Allow users to review previous requests.
-- Support request status updates as the system develops.
-- Evaluate the classification model using appropriate testing methods.
-- Maintain source code and documentation in a GitHub repository.
+- Predict a suitable service category from the submitted text.
+- Allow the customer to review or change the suggested category.
+- Store the original predicted category and the customer's final selected category.
+- Match requests with approved providers based on service category and provider information.
+- Allow customers to send requests and track their status.
+- Allow providers to accept, reject, and complete service requests.
+- Allow customers to submit ratings and written feedback after completion.
+- Provide administrator functions for account, provider, category, and request management.
+- Test the application using automated tests and browser-based workflows.
+- Maintain source code, milestone documents, and evidence in GitHub.
 
 ## 3. Current Implementation Status
 
-The project is being developed in stages.
+### Implemented and demonstrated in Week 3
 
-### Implemented in the technical proof of concept
+- Flask application with a home page and role-based pages.
+- Customer and service-provider registration.
+- Login and logout.
+- Administrator account setup through `seed_admin.py`.
+- Administrator dashboard and provider approval.
+- Provider profile and service information.
+- Service request submission.
+- TF-IDF and Logistic Regression category prediction.
+- Display of predicted and selected categories.
+- Storage of service requests in SQLite.
+- Provider matching and sending a request to a selected provider.
+- Provider request workspace.
+- Provider acceptance and status updates, including **In Progress** and **Completed**.
+- Customer request tracking.
+- Customer rating and written feedback.
+- Automated Week 3 workflow tests.
 
-- A web interface for entering a problem description.
-- A Python Flask application that processes submitted descriptions.
-- Text classification using TF-IDF and Logistic Regression.
-- SQLite storage for submitted requests.
-- Display of the predicted category, model confidence value, and request ID.
-- Local execution through a web browser.
+### Current test evidence
 
-### Planned for later development
+The Week 3 automated test run collected four tests and reported:
 
-- A larger and more representative labeled training dataset.
-- Improved classification and model evaluation.
-- Service provider registration and management.
-- Matching requests with eligible service providers.
-- Request history and status management.
-- Authentication and access control, if required by the final design.
-- Additional functional, performance, security, and usability testing.
+```text
+4 passed in 5.08s
+```
 
-These planned features will be marked as complete only after they have been implemented and tested.
+The browser-based test demonstrated one complete Plumbing request:
+
+1. Customer Rahul Kumar submitted a kitchen sink pipe leakage problem.
+2. The classifier displayed **Plumbing** as the predicted category.
+3. The displayed model score was **0.24**.
+4. The selected category was Plumbing.
+5. The request was sent to Suresh Home Plumbing Services.
+6. The provider accepted the request and updated it to In Progress.
+7. The provider changed the status to Completed.
+8. The customer submitted a 5/5 rating and written feedback.
+
+The displayed score of 0.24 is the score shown for that prediction. It is **not** the model's overall accuracy.
+
+### Work still requiring testing or development
+
+- Test the classifier with more categories and a wider range of descriptions.
+- Record and evaluate incorrect or uncertain category predictions.
+- Complete browser tests for provider rejection, cancellation, profile updates, availability changes, and category management.
+- Complete negative-input and role-access tests.
+- Review the remaining partial functional requirements.
+- Expand administrator reporting and provider-side service history/feedback views where required by the approved requirements.
+
+A feature should be described as complete only when it is present in the code and has suitable test evidence.
 
 ## 4. Technologies Used
 
 | Technology | Purpose |
 |---|---|
-| Python | Main programming language for the application and classification logic. |
-| Flask | Handles web requests and connects the user interface with the Python code. |
-| HTML | Provides the structure of the web interface. |
-| CSS | Provides styling for the interface. |
-| scikit-learn | Provides the text-classification algorithms and evaluation tools. |
-| TF-IDF | Converts text descriptions into numerical features for classification. |
-| Logistic Regression | Predicts a service category from the processed text. |
-| SQLite | Stores submitted requests and their classification results. |
-| pandas | Supports working with tabular data where needed. |
-| Visual Studio Code | Development environment. |
-| Git and GitHub | Source code management and project documentation. |
+| Python | Main programming language |
+| Flask | Web application and route handling |
+| HTML | Page structure and forms |
+| CSS | Page layout and visual styling |
+| SQLite | Application data storage |
+| scikit-learn | Machine-learning classification |
+| TF-IDF | Converts problem text into numerical features |
+| Logistic Regression | Predicts a service category |
+| pytest | Automated testing |
+| Visual Studio Code | Development environment |
+| Git and GitHub | Version control and project submission |
+
+The current project uses a local SQLite database. A separate database server is not required.
 
 ## 5. Service Categories
 
-The initial classification model uses three example categories:
+The application is configured with these service categories:
 
-1. **Plumbing:** Problems involving pipes, taps, sinks, leaks, and related equipment.
-2. **Electrical:** Problems involving electrical switches, wiring, lights, and related equipment.
-3. **Appliance Repair:** Problems involving household appliances such as refrigerators and washing machines.
+1. Plumbing
+2. Electrical
+3. Appliance Repair
+4. Carpentry
+5. Painting
+6. Cleaning
+7. Other
 
-These categories are intended for the initial prototype. Additional categories may be added after the training data and classification approach have been evaluated.
+The model's prediction depends on its training data and learned patterns. A category in the application's category list is not automatically guaranteed to be predicted correctly. Additional examples and evaluation are needed to assess the classifier for each category.
 
-## 6. Project Repository Structure
+## 6. Repository Structure
 
-The repository should contain the following files and folders, adjusted to match the actual files in the project.
+The current project is organized with the application source inside `src/`. The main structure is:
 
 ```text
-Local-Service-Problem-Diagnosis-and-Matching/
+Local_Service_Connect/
 │
-├── app.py
-├── classifier.py
-├── requirements.txt
-├── README.md
-├── .gitignore
-│
-├── data/
-│   └── sample_training_data.csv
-│
-├── templates/
-│   └── index.html
-│
-├── static/
-│   └── style.css
-│
-├── tests/
-│   └── test_app.py
-│
+├── .venv/                         # Local Python virtual environment (do not commit)
 ├── docs/
-│   ├── architecture.md
-│   ├── testing-plan.md
-│   └── screenshots/
+│   └── step_2/
+│       ├── week_1/
+│       ├── week_2/
+│       └── week_3/
+│           ├── integration_and_progress.pdf
+│           └── screenshots/       # Week 3 browser and test evidence
 │
-└── service_requests.db
+├── src/
+│   ├── app.py                     # Flask application and routes
+│   ├── classifier.py              # TF-IDF and Logistic Regression classifier
+│   ├── config.py                  # Application configuration
+│   ├── database.py                # SQLite connection and database functions
+│   ├── schema.sql                 # Database schema
+│   ├── services.py                # Provider matching logic
+│   ├── seed_admin.py              # Administrator account setup
+│   ├── requirements.txt           # Python dependencies
+│   ├── sample_training_data.csv   # Sample classifier training data
+│   ├── instance/                  # Local application database/runtime data
+│   ├── static/                    # CSS and static assets
+│   ├── templates/                 # Flask HTML templates
+│   └── tests/
+│       ├── conftest.py
+│       └── test_week3_workflow.py
+│
+└── README.md
 ```
 
-**Note:** This is a suggested structure, not a statement that every file already exists. Keep the files that are actually part of your project and update the README when you add new components. Do not commit a generated SQLite database containing real or sensitive user information.
+This tree describes the current main layout. Keep the actual filenames and folders in the repository synchronized with this README when the project changes.
+
+**Database and privacy note:** Do not commit a local database containing real user information, passwords, or other private records. Do not commit the `.venv` directory or secret environment values.
 
 ## 7. System Requirements
 
-The following software is required to run the current proof of concept:
-
 - Windows, Linux, or macOS.
-- Python 3.13 or another Python version compatible with the installed dependencies.
-- Visual Studio Code or another Python development environment.
-- pip for installing Python packages.
-- A web browser.
-- Git for repository management.
+- Python 3.13 or a Python version supported by the packages in `src/requirements.txt`.
+- pip.
+- Visual Studio Code or another Python editor.
+- A current web browser.
+- Git, if cloning or pushing the repository.
 
-The current prototype uses SQLite, which is included with standard Python installations. A separate database server is not required.
+SQLite is included with standard Python installations in normal Python distributions.
 
-## 8. Installation Instructions
+## 8. Installation and Setup
 
-### Step 1: Clone the repository
+### 8.1 Clone or open the repository
 
-Open a terminal and run:
+Clone the GitHub repository using its actual URL:
 
 ```bash
 git clone YOUR_GITHUB_REPOSITORY_URL
-cd YOUR_PROJECT_FOLDER
+cd Local_Service_Connect
 ```
 
-Replace the example placeholders with the actual GitHub repository URL and project directory name.
+Replace `YOUR_GITHUB_REPOSITORY_URL` with the repository URL. If the project is already on your computer, open the existing `Local_Service_Connect` folder in Visual Studio Code.
 
-Alternatively, download the repository from GitHub and open its folder in Visual Studio Code.
+### 8.2 Create a virtual environment
 
-### Step 2: Create a virtual environment
+Run this from the project root:
 
-Run:
-
-```bash
+```powershell
 python -m venv .venv
 ```
 
-Activate the environment in Windows PowerShell:
+Activate it in Windows PowerShell:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
 
-If activation is successful, the terminal should display `(.venv)`.
+The terminal should show `(.venv)` when activation succeeds.
 
-For Windows Command Prompt, use:
+If PowerShell blocks script activation, use the Python environment activation method permitted by your computer's policy, or activate it from Command Prompt:
 
 ```cmd
 .venv\Scripts\activate.bat
 ```
 
-### Step 3: Install dependencies
+### 8.3 Install dependencies
 
-Run the following command from the project root:
+The `requirements.txt` file is inside `src`, so change to that folder before installing:
 
-```bash
+```powershell
+cd .\src
 python -m pip install -r requirements.txt
 ```
 
-The `requirements.txt` file should list the dependencies required by the actual application. If the file is missing, create it using the packages used by your source code.
+If the virtual environment is not active, activate it from the project root first.
 
-To verify the main dependencies, run:
+## 9. Configuration and Administrator Setup
 
-```bash
-python -c "import flask, pandas, sklearn; print('Dependencies installed successfully')"
+The application uses local configuration and SQLite. The administrator setup script requires an environment variable named `ADMIN_PASSWORD`.
+
+From the `src` folder in PowerShell, set a strong password for the current terminal session:
+
+```powershell
+$env:ADMIN_PASSWORD = "ChooseYourOwnStrongPassword"
 ```
 
-## 9. Configuration Instructions
+Then run:
 
-The current proof of concept runs locally and does not require external API keys or cloud services.
+```powershell
+python seed_admin.py
+```
 
-Before running the application, check the following:
+The tested setup script reported that the administrator account was created for:
 
-1. The Python virtual environment is activated.
-2. The required packages are installed.
-3. The application source files are in the expected locations.
-4. The training data file is available if the classifier loads data from a file.
-5. The application has permission to create or write to its SQLite database location.
+```text
+admin@localservice.test
+```
 
-If the database is created automatically by the application, make sure the configured database path is writable. If the database is initialized through a separate script, run that script before starting the application.
+Use the password that you set in `ADMIN_PASSWORD` when logging in. Do not put the password in this README, source control, screenshots, or a public commit.
 
-No passwords, API keys, database credentials, or other secrets should be included in this README or committed to GitHub.
+The environment variable is available only in the current PowerShell session. If the terminal is closed, set it again before running the setup script.
 
 ## 10. Running the Application
 
-From the project directory, activate the virtual environment and run:
+From the `src` folder, with the virtual environment activated, run:
 
-```bash
+```powershell
 python app.py
 ```
 
-If Flask starts successfully, the terminal should display a local address similar to:
+Open the local address in a browser:
 
 ```text
 http://127.0.0.1:5000
 ```
 
-Open the address in a web browser.
+To stop the Flask development server, return to the terminal and press `Ctrl+C`.
 
-To stop the local server, return to the terminal and press `Ctrl+C`.
+Run the application from `src` so that relative paths and the project configuration resolve as expected.
 
-## 11. How to Use the Proof of Concept
+## 11. Main Application Workflow
 
-1. Open the application in a web browser.
-2. Enter a description of a household or equipment problem.
-3. Select **Classify and Save**.
-4. Review the predicted service category.
-5. Check the displayed confidence value and request ID.
-6. Inspect the SQLite database to verify that the request was saved.
+### 11.1 Customer workflow
 
-For example, the following description was tested:
+1. Open the home page.
+2. Register a local user account.
+3. Log in.
+4. Open the new service request form.
+5. Enter a clear description of the household or equipment problem.
+6. Submit the request.
+7. Review the category predicted by the classifier.
+8. Accept the suggested category or select another available category.
+9. Review matching providers.
+10. Send the request to a selected provider.
+11. Track the request from the customer dashboard.
+12. After the request is completed, submit a rating and written feedback.
 
-**Input:** The kitchen sink pipe is leaking.
+### 11.2 Service provider workflow
 
-**Observed result:**
+1. Register using the Service Provider account type.
+2. Enter the business name, service area, service description, availability, and service categories requested by the form.
+3. Wait for administrator approval.
+4. Log in after approval.
+5. Open the provider area and review incoming requests.
+6. Accept or reject a request.
+7. For an accepted request, update the status as work progresses.
+8. Mark the request Completed when the service is finished.
 
-- Predicted category: Plumbing
-- Model confidence: 0.51
-- Saved request ID: 1
+### 11.3 Administrator workflow
 
-This result demonstrates the basic classification and request-saving workflow. It does not establish the model's overall accuracy or prove that all types of problem descriptions will be classified correctly.
+1. Create or confirm the administrator account using `seed_admin.py`.
+2. Log in with the administrator credentials.
+3. Open the Admin dashboard.
+4. Review pending provider registrations.
+5. Approve or deactivate providers as appropriate.
+6. Review user accounts, categories, and service requests.
+7. Use the available administration controls to manage supported records.
 
-## 12. Database Information
+The exact controls available on the dashboard depend on the current implementation.
 
-SQLite is used to store information submitted through the application.
+## 12. Example Problem Submission
 
-The initial database implementation stores request information, including the problem description, predicted category, confidence value, and creation time, as supported by the current implementation.
+The following description was used in the Week 3 browser workflow:
 
-As the project develops, the database may be expanded to include tables for:
+**Input:**
 
-- Users and their accounts.
-- Service providers and their service categories.
-- Submitted service requests.
-- Classification results.
-- Request status updates and service history.
+> Water is leaking continuously from the kitchen sink pipe. The area under the sink is becoming wet. I need a plumber to inspect the pipe and repair the leakage.
 
-The final database structure will follow the approved system design. The additional tables and functions should not be considered implemented until they have been created and tested.
+**Observed application output:**
 
-### Database verification
+| Field | Observed value |
+|---|---|
+| Predicted category | Plumbing |
+| Model score displayed | 0.24 |
+| Selected category | Plumbing |
+| Service area | Garland, Texas |
+| Matched provider | Suresh Home Plumbing Services |
+| Request ID | 1 |
+| Final request status | Completed |
+| Customer rating | 5/5 |
 
-To verify a saved request:
+This example confirms that the tested description passed through the main workflow. It does not establish the overall classification accuracy of the model.
 
-1. Run the application and submit a test description.
-2. Identify the SQLite database file used by the application.
-3. Open the database with a SQLite viewer or Python's `sqlite3` module.
-4. Inspect the relevant request table.
-5. Compare the stored description and category with the result displayed by the application.
+## 13. Database Information
 
-A database record should be checked directly rather than assuming that a displayed request ID alone proves that all stored fields are correct.
+SQLite stores the application's records. The current database schema includes data for:
 
-## 13. Testing Instructions
+- Users and account roles.
+- Service categories.
+- Provider profiles.
+- Provider service categories.
+- Service requests.
+- Customer feedback.
 
-Testing will be performed as additional features are implemented.
+The service request workflow stores the predicted category and the final selected category. This allows the project to compare the classifier's suggestion with the category retained by the customer.
 
-### Current proof-of-concept tests
+The database is initialized by the application/database setup code. The actual database file is kept under the application's local runtime/instance area. Do not assume that a displayed request ID alone proves every database field was saved correctly; verify the record when performing database tests.
 
-| Test | Input or action | Expected result |
+### Database inspection
+
+For a database check:
+
+1. Start the application and submit a test request.
+2. Identify the database path configured by the application.
+3. Open the SQLite database using a SQLite viewer or Python's `sqlite3` module.
+4. Inspect the relevant user, provider, service request, and feedback records.
+5. Compare the stored values with the information shown in the browser.
+
+Do not publish a database containing real personal information.
+
+## 14. Automated Testing
+
+The project uses pytest. Run the tests from the `src` folder:
+
+```powershell
+python -m pytest -v
+```
+
+The Week 3 test run collected four tests and reported:
+
+| Test | Purpose | Recorded result |
 |---|---|---|
-| Application startup | Run `python app.py`. | Flask starts without an application error. |
-| Valid problem submission | Enter a household problem description. | The application accepts the input. |
-| Classification | Submit a known example. | The model returns a service category. |
-| Database storage | Submit a valid request and inspect SQLite. | The corresponding request record is present. |
-| Empty input | Submit the form without a description. | The application displays a validation message and does not save an invalid request. |
+| `test_user_submit_predict_store_and_match` | Checks customer request submission, category prediction, database storage, and provider matching. | PASSED |
+| `test_invalid_short_problem_is_rejected` | Checks rejection of a short problem description. | PASSED |
+| `test_provider_accept_and_complete_then_user_feedback` | Checks provider acceptance/completion and customer feedback. | PASSED |
+| `test_admin_approves_provider` | Checks administrator provider approval. | PASSED |
 
-Record the actual results of each test before marking it as passed.
+**Recorded Week 3 result:**
 
-### Planned tests
+```text
+4 passed in 5.08s
+```
 
-Additional testing will cover:
+This result applies to the test run captured on November 24, 2026. Run the tests again after making code changes and use the new terminal output as the current result.
 
-- Unit testing of classification and validation functions.
-- Integration testing between Flask, the classifier, and SQLite.
-- Evaluation using a held-out classification dataset.
-- Provider-matching tests.
-- Request-history and status-update tests.
-- Performance testing using a defined workload.
-- Security testing for input validation and access control.
-- Usability testing with representative users.
+### Browser-based integration test
 
-The classification model will be evaluated using accuracy, precision, recall, and F1-score. Any target values will be treated as evaluation goals until actual results have been collected.
+The following end-to-end workflow was also demonstrated in the browser:
 
-## 14. Troubleshooting
+| Step | Action | Observed result |
+|---|---|---|
+| 1 | Register customer and provider | Accounts created |
+| 2 | Approve provider as administrator | Provider approval updated |
+| 3 | Submit a plumbing problem as customer | Request created |
+| 4 | Review classifier output | Plumbing predicted |
+| 5 | Send request to provider | Request sent |
+| 6 | Open provider workspace | Incoming request displayed |
+| 7 | Update service status | In Progress |
+| 8 | Complete service | Completed |
+| 9 | Submit customer feedback | Confirmation displayed; 5/5 rating shown |
 
-### Error: `ModuleNotFoundError: No module named 'flask'`
+Additional tests are still needed for other categories, invalid inputs, role restrictions, provider rejection, request cancellation, and other administration functions.
 
-Activate the virtual environment and install the dependencies:
+## 15. Functional Requirement Status
 
-```bash
+The following is a high-level summary of the approved functional requirement groups. The detailed requirement-by-requirement tracker is maintained in the Week 3 milestone document.
+
+| Requirement group | Main functions | Current status |
+|---|---|---|
+| FR-01 to FR-18 – Local user | Registration, login, profile, problem submission, category review, provider matching, request tracking, cancellation, feedback | Main request and feedback workflow demonstrated; profile, cancellation, and some history functions need further testing |
+| FR-19 to FR-31 – Service provider | Provider registration/profile, service categories, availability, incoming requests, accept/reject, status updates, completion, service history | Registration, approval-dependent request receipt, acceptance, status update, and completion demonstrated; rejection and some profile/history functions need testing |
+| FR-32 to FR-38 – Administrator | Admin access, user/provider management, provider approval, category management, request monitoring, reports | Admin access and provider approval demonstrated; several management controls need browser testing; full reporting is not implemented |
+| FR-39 to FR-42 – NLP/ML | Process text, predict category, use category in matching, store predicted and final category | Main Plumbing prediction and category-based matching demonstrated; broader model evaluation remains in progress |
+
+### Known requirement work still to review
+
+- **FR-10:** Verify the full category acceptance/change workflow against the approved requirement wording.
+- **FR-12:** Verify that all required provider details, availability, and ratings are displayed.
+- **FR-17 and FR-31:** Verify the full customer and provider service-history views.
+- **FR-37:** Extend testing of invalid, duplicate, and inappropriate records.
+- **FR-38:** A full system reporting view remains to be implemented.
+
+Use the Week 3 `integration_and_progress.pdf` tracker as the detailed status record. Update both documents when requirement status changes.
+
+## 16. Design Changes and Current Limitations
+
+The project continues to use the planned technology stack: Python, Flask, SQLite, HTML/CSS, scikit-learn, TF-IDF, and Logistic Regression.
+
+During Week 3 integration, two issues were corrected:
+
+- A SQLite database-lock issue occurred in the test fixture. The fixture setup was changed so that test users were created before opening the database connection used for provider setup.
+- The administrator category page expected category records with fields such as ID, name, and active status, but the route initially supplied category-name strings. The route/template data was corrected, and the administrator approval test subsequently passed.
+
+Current limitations and work to review:
+
+- The browser evidence demonstrates one complete Plumbing request. Other service categories still need browser tests.
+- The model score shown for the Plumbing example was 0.24. More labeled data and held-out evaluation are needed before judging model performance.
+- Provider rejection, customer cancellation, profile changes, availability changes, and category administration need additional browser testing.
+- Full administrator reports are not yet implemented.
+- Customer and provider service-history and feedback views need further verification.
+- The project is an academic prototype and has not been assessed as a production service.
+
+## 17. Troubleshooting
+
+### `ModuleNotFoundError`
+
+Activate the project virtual environment and install the packages from the `src` folder:
+
+```powershell
 python -m pip install -r requirements.txt
 ```
 
-Then run:
+### `Set ADMIN_PASSWORD before running this script`
 
-```bash
-python app.py
+Set the environment variable in the current PowerShell terminal and run the script again:
+
+```powershell
+$env:ADMIN_PASSWORD = "ChooseYourOwnStrongPassword"
+python seed_admin.py
 ```
 
-### Error: The application cannot find the training dataset
+### Training data cannot be found
 
-Check whether the dataset exists at the path expected by the classifier. If the code uses a relative path, run the application from the correct project directory.
+Check that the training data file exists and that the application is being run from the `src` folder. Confirm that the file path used by `classifier.py` matches the actual file location.
 
-### Error: The database cannot be opened or updated
+### SQLite database is locked
 
-Check the database path, folder permissions, and database initialization code. Confirm that the application is using the intended SQLite file.
+Stop duplicate application or test processes that may be using the same database. Close database viewer connections and rerun the test. Check that test fixtures close connections after use.
 
-### Error: The port is already in use
+### Port 5000 is already in use
 
-Another application may already be using port 5000. Stop the other Flask process or configure an available port through the application's development settings.
+Stop the other process using port 5000 or change the Flask development port in the local run configuration.
 
-### Unexpected classification result
+### A predicted category is unexpected
 
-The current model uses a small illustrative dataset. Incorrect predictions are possible. Record the input and result, compare the prediction with the expected category, and investigate the issue during model evaluation.
+The model can make incorrect predictions. Record the description and actual result, compare it with the expected category, and include the case in model evaluation. Do not change a recorded result just to make it match the expected category.
 
-## 15. Git and GitHub Workflow
+## 18. GitHub and Milestone Submission
 
-GitHub will be used to maintain the source code, documentation, and development history.
+Before committing, check the files that Git will include:
 
-After completing a meaningful change, use the following commands:
-
-```bash
+```powershell
 git status
-git add app.py requirements.txt README.md
-git commit -m "Update proof of concept and documentation"
+```
+
+Add the relevant source code, tests, documentation, and approved evidence:
+
+```powershell
+git add README.md src docs
+git status
+git commit -m "Update Local Service Connect Week 3 integration"
 git push
 ```
 
-Add other relevant source files to the commit when they change. Before committing, inspect `git status` to make sure that secrets, virtual-environment files, temporary files, and sensitive database contents are not included.
+Check the staged files before committing. Do not add:
 
-A `.gitignore` file should exclude generated files that do not belong in the repository.
+- `.venv/`
+- `__pycache__/`
+- `.pytest_cache/`
+- `.env` files or passwords
+- Local databases containing personal information
+- Temporary files or editor caches
 
-For example:
+A suitable `.gitignore` should include at least:
 
 ```gitignore
 .venv/
 __pycache__/
 *.py[cod]
+.pytest_cache/
 .env
 *.db
-.pytest_cache/
+instance/
 ```
 
-If the project intentionally includes a non-sensitive, empty database template or a database initialization script, manage it separately rather than committing a database containing private records.
+If a non-sensitive database template or required sample database is intentionally part of the project, decide separately whether it should be tracked. Do not commit the live local database with test-user information.
 
-Use regular commits to document the development process instead of waiting until the end of the project to upload all files.
+## 19. Next Development Tasks
 
-## 16. Project Schedule
+The next development tasks are:
 
-The planned completion date is December 8, 2026.
+1. Test the classifier with Electrical, Appliance Repair, Carpentry, Cleaning, Painting, and Other descriptions. Record actual predictions and review incorrect results.
+2. Test invalid inputs and access restrictions, including blank descriptions, duplicate registration, invalid login, and customer access to administrator/provider pages.
+3. Test provider rejection, request cancellation, profile updates, availability changes, and administrator category management.
+4. Review and complete the remaining partial requirements, especially FR-10, FR-12, FR-17, FR-31, FR-37, and FR-38.
+5. Update the requirement tracker, complete final testing and documentation, and prepare the final project submission.
 
-| Milestone | Planned completion |
+## 20. Project Schedule
+
+The planned final project date is December 8, 2026.
+
+| Milestone | Planned date |
 |---|---|
 | Architecture and design | October 30, 2026 |
 | Technical proof of concept | October 31, 2026 |
@@ -368,35 +537,10 @@ The planned completion date is December 8, 2026.
 | Documentation | December 4, 2026 |
 | Final system and presentation | December 8, 2026 |
 
-These are planned dates and will be updated as development progresses.
+Dates are project targets and should be updated if the course schedule or development plan changes.
 
-## 17. Limitations
+## 21. Conclusion
 
-The current proof of concept uses a small illustrative dataset. Its predictions have not yet been validated against a sufficiently large, representative test dataset.
+Local Service Connect now connects the main customer, service provider, administrator, classification, database, and feedback functions in one Flask application. The Week 3 browser test demonstrated a Plumbing request from submission through provider completion and customer feedback. The automated test suite also reported four passing tests.
 
-The current implementation demonstrates problem submission, classification, and database storage. It is not yet a complete service marketplace. Provider matching, account management, request history, and status updates require further implementation and testing if they are included in the final approved requirements.
-
-The system should therefore be treated as an academic prototype until its classification quality, security, reliability, and other requirements have been evaluated.
-
-## 18. Future Improvements
-
-Possible improvements include:
-
-- Expanding the labeled dataset to cover more problem types and descriptions.
-- Improving classification quality through model evaluation and refinement.
-- Implementing provider registration and category-based matching.
-- Adding request history and status tracking.
-- Improving input validation and access control.
-- Evaluating performance with a larger number of requests.
-- Improving the interface based on user feedback.
-- Preparing clearer installation and database initialization instructions.
-
-These improvements will be prioritized according to the project requirements and the available development time.
-
-## 19. Conclusion
-
-The Local Service Problem Diagnosis and Matching System is being developed to help users identify suitable service categories for household and equipment problems. The current proof of concept demonstrates a basic connection between a Flask web application, a text-classification model, and an SQLite database.
-
-The next stages will focus on improving the classification model, implementing provider matching and request-management features, and testing the completed system against its requirements. The GitHub repository will be updated throughout development to maintain the source code, instructions, documentation, and evidence of progress.
-
-The final objective is to deliver a working minimum viable product with documented test results by December 8, 2026.
+The next stage is to test more service categories, check negative and access-control cases, finish the remaining requirements, and evaluate the classifier with a larger and more representative dataset. The repository and milestone evidence will be updated as the project moves toward the planned December 8, 2026 completion date.
