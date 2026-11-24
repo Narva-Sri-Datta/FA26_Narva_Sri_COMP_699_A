@@ -1,0 +1,230 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<p class="eyebrow">Administration</p>
+<h1>System management</h1>
+
+<section class="panel">
+    <h2>Provider approvals</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Provider</th>
+                    <th>Business</th>
+                    <th>Area</th>
+                    <th>Approval</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for p in providers %}
+                <tr>
+                    <td>
+                        {{ p.name }}<br>
+                        {{ p.email }}
+                    </td>
+
+                    <td>{{ p.business_name }}</td>
+                    <td>{{ p.service_area }}</td>
+
+                    <td>
+                        <form method="post"
+                              action="{{ url_for('admin_provider_approval', user_id=p.id) }}">
+
+                            <input type="hidden"
+                                   name="approved"
+                                   value="{{ 0 if p.approved else 1 }}">
+
+                            <button class="small">
+                                {{ 'Deactivate approval' if p.approved else 'Approve provider' }}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">No service providers registered.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>User accounts</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Account</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.name }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.role }}</td>
+
+                    <td>
+                        {% if u.role != 'admin' %}
+                        <form method="post"
+                              action="{{ url_for('admin_user_active', user_id=u.id) }}">
+
+                            <input type="hidden"
+                                   name="active"
+                                   value="{{ 0 if u.active else 1 }}">
+
+                            <button class="small">
+                                {{ 'Deactivate' if u.active else 'Activate' }}
+                            </button>
+                        </form>
+                        {% else %}
+                        Administrator
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">No registered users.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Service categories</h2>
+
+    <form class="inline-form"
+          method="post"
+          action="{{ url_for('admin_add_category') }}">
+
+        <input name="name"
+               placeholder="New category"
+               required>
+
+        <button type="submit">Add category</button>
+    </form>
+
+    <ul>
+        {% for c in categories %}
+
+        {% if c is string %}
+
+        <li>{{ c }}</li>
+
+        {% else %}
+
+        <li>
+            {{ c.name }}
+            ·
+            {{ 'Active' if c.active else 'Inactive' }}
+
+            <form class="inline"
+                  method="post"
+                  action="{{ url_for('admin_category_update', category_id=c.id) }}">
+
+                <input name="name"
+                       value="{{ c.name }}"
+                       required>
+
+                <button class="small" type="submit">
+                    Rename
+                </button>
+            </form>
+
+            <form class="inline"
+                  method="post"
+                  action="{{ url_for('admin_category_active', category_id=c.id) }}">
+
+                <input type="hidden"
+                       name="active"
+                       value="{{ 0 if c.active else 1 }}">
+
+                <button class="link-button" type="submit">
+                    {{ 'Deactivate' if c.active else 'Activate' }}
+                </button>
+            </form>
+
+            <form class="inline"
+                  method="post"
+                  action="{{ url_for('admin_category_delete', category_id=c.id) }}">
+
+                <button class="link-button" type="submit">
+                    Remove
+                </button>
+            </form>
+        </li>
+
+        {% endif %}
+
+        {% else %}
+        <li>No service categories available.</li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section class="panel">
+    <h2>Service request monitoring</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for r in requests %}
+                <tr>
+                    <td>#{{ r.id }}</td>
+                    <td>{{ r.customer }}</td>
+                    <td>{{ r.final_category }}</td>
+                    <td>{{ r.status }}</td>
+                    <td>{{ r.created_at }}</td>
+
+                    <td>
+                        <form method="post"
+                              action="{{ url_for('admin_remove_request', request_id=r.id) }}">
+
+                            <button class="small danger" type="submit">
+                                Remove record
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No service requests available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <p>
+        Total registered users: {{ users|length }}
+        · Providers: {{ providers|length }}
+        · Requests: {{ requests|length }}
+    </p>
+</section>
+
+{% endblock %}
